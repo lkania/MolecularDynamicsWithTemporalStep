@@ -1,7 +1,7 @@
-package itba.edu.ar.ss.data.force.impl;
+package itba.edu.ar.ss.model.force.impl;
 
-import itba.edu.ar.ss.data.entity.impl.Spring;
-import itba.edu.ar.ss.data.force.Force;
+import itba.edu.ar.ss.model.entity.impl.Spring;
+import itba.edu.ar.ss.model.force.Force;
 
 public class SpringForce implements Force<Double> {
 

@@ -1,20 +1,26 @@
-package itba.edu.ar.ss.data.force.impl;
+package itba.edu.ar.ss.model.force.impl;
 
 import itba.edu.ar.cellIndexMethod.data.particle.FloatPoint;
-import itba.edu.ar.ss.data.entity.impl.AstronomicalObject;
-import itba.edu.ar.ss.data.force.Force;
+import itba.edu.ar.ss.model.entity.impl.AstronomicalObject;
+import itba.edu.ar.ss.model.force.Force;
 
 public class AstronomicalObjectForce implements Force<FloatPoint> {
 
 	private AstronomicalObject ao1;
-	private AstronomicalObject ao2;
+	private AstronomicalObject sun;
 	private static double G = 6.693 * Math.pow(10, -11);
+	
+	public AstronomicalObjectForce(AstronomicalObject ao1, AstronomicalObject sun) {
+		super();
+		this.ao1 = ao1;
+		this.sun = sun;
+	}
 
 	public FloatPoint getCurrentForce() {
-		FloatPoint vectorDistance = ao2.getPosition().minus(ao1.getPosition());
+		FloatPoint vectorDistance = sun.getPosition().minus(ao1.getPosition());
 		double absDistance = vectorDistance.abs();
 
-		double absForce = ao1.getMass() * ao2.getMass() * G / Math.pow(absDistance, 2);
+		double absForce = ao1.getMass() * sun.getMass() * G / Math.pow(absDistance, 2);
 
 		FloatPoint force = vectorDistance.divide(absDistance).multiply(absForce);
 

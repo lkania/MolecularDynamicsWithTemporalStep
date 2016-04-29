@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import itba.edu.ar.ss.algorithm.AlgorithmObserver;
-import itba.edu.ar.ss.data.entity.Entity;
+import itba.edu.ar.ss.model.entity.Entity;
 
 public class SpringPositionVsTime implements AlgorithmObserver<Double> {
 

@@ -5,9 +5,9 @@ import itba.edu.ar.ss.algorithm.AlgorithmObserver;
 import itba.edu.ar.ss.algorithm.impl.BeemanForSpring;
 import itba.edu.ar.ss.algorithm.impl.GearPredictorCorrector;
 import itba.edu.ar.ss.algorithm.impl.VerletVelocityForSpring;
-import itba.edu.ar.ss.data.entity.impl.Spring;
-import itba.edu.ar.ss.data.force.Force;
-import itba.edu.ar.ss.data.force.impl.SpringForce;
+import itba.edu.ar.ss.model.entity.impl.Spring;
+import itba.edu.ar.ss.model.force.Force;
+import itba.edu.ar.ss.model.force.impl.SpringForce;
 import itba.edu.ar.ss.output.SpringError;
 import itba.edu.ar.ss.output.SpringPositionVsTime;
 

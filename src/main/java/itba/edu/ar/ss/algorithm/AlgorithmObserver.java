@@ -2,7 +2,7 @@ package itba.edu.ar.ss.algorithm;
 
 import java.util.List;
 
-import itba.edu.ar.ss.data.entity.Entity;
+import itba.edu.ar.ss.model.entity.Entity;
 
 public interface AlgorithmObserver<T> {
 

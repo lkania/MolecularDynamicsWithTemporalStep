@@ -1,8 +1,8 @@
 package itba.edu.ar.ss.algorithm.impl;
 
-import itba.edu.ar.ss.data.entity.Entity;
-import itba.edu.ar.ss.data.entity.impl.Spring;
-import itba.edu.ar.ss.data.force.Force;
+import itba.edu.ar.ss.model.entity.Entity;
+import itba.edu.ar.ss.model.entity.impl.Spring;
+import itba.edu.ar.ss.model.force.Force;
 
 public class BeemanForSpring extends AbstractAlgorithm<Double> {
 

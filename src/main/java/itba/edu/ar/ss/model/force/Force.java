@@ -1,4 +1,4 @@
-package itba.edu.ar.ss.data.force;
+package itba.edu.ar.ss.model.force;
 
 public interface Force<T> {
 

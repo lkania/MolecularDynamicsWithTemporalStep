@@ -1,4 +1,4 @@
-package itba.edu.ar.ss.data.entity;
+package itba.edu.ar.ss.model.entity;
 
 import itba.edu.ar.cellIndexMethod.data.particle.FloatPoint;
 

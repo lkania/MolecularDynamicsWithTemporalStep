@@ -1,6 +1,6 @@
-package itba.edu.ar.ss.data.entity.impl;
+package itba.edu.ar.ss.model.entity.impl;
 
-import itba.edu.ar.ss.data.entity.Entity;
+import itba.edu.ar.ss.model.entity.Entity;
 
 public class Spring implements Entity<Double>{
 
