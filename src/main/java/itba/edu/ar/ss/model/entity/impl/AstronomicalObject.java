@@ -14,6 +14,11 @@ public class AstronomicalObject implements Entity<FloatPoint>{
 		super();
 		this.particle = particle;
 		this.setAngularMoment(angularMoment);
+		this.previousPosition = particle.getPosition();
+	}
+
+	private void setAngularMoment(double angularMoment) {
+		this.angularMoment=angularMoment;
 	}
 
 	public FloatPoint getPosition() {

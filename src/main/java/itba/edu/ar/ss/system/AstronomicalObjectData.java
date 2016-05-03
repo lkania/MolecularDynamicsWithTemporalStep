@@ -30,5 +30,13 @@ public class AstronomicalObjectData extends Data {
 		return velocity;
 
 	}
+	
+	private static double A = Math.pow(10, 10) - Math.pow(10, 9);
+	private static double B = Math.pow(10, 9);
+	
+	@Override
+	public double getPosition(double random) {
+		return sunPosition.getX()+(random*A+B)*((Math.random()<0.5) ? 1:-1);
+	}
 
 }
