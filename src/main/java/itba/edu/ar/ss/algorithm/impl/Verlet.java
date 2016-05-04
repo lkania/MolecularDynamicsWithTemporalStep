@@ -14,7 +14,6 @@ public class Verlet extends AbstractAlgorithm<FloatPoint> {
 	}
 
 	public void evolveEntity(Entity<FloatPoint> entity, Force<FloatPoint> force) {
-
 		FloatPoint newPosition = entity.getPosition().multiply(2).minus(entity.getPreviousPosition())
 				.plus(force.getCurrentForce().multiply(powDeltaTime2 / entity.getMass()));
 

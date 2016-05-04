@@ -26,7 +26,7 @@ public abstract class SolarSystemData {
 	public AstronomicalObject getSun() {
 		if (sun == null) {
 			sun = new AstronomicalObject(new Particle(getSunMass(),
-					new FloatPoint(getSpaceLength() / 2, getSpaceLength() / 2), new FloatPoint(0, 0)), 0);
+					new FloatPoint(getSpaceLength() / 2, getSpaceLength() / 2), new FloatPoint(0, 0)), 0,getDeltaTime());
 		}
 
 		return sun;

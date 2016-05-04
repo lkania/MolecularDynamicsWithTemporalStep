@@ -20,24 +20,33 @@ import itba.edu.ar.ss.system.data.SolarSystemData;
 
 public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 
+	private static double scalation = Math.pow(10, 9);
+	private static final String COLUMNS_FILE = "Properties=id:I:1:pos:R:2:velocity:R:2";
 	private List<ParticleData> data = new LinkedList<ParticleData>();
 
 	private String path;
 	private static String _SEPARTOR_ = " ";
 	private String sunData;
 	private int particleQuantity;
+	private double length;
 
-	public SolarSystemPositions(String path, SolarSystemData data) {
+	public SolarSystemPositions(String path, SolarSystemData data) throws IOException {
 		this.path = path;
 		AstronomicalObject sun = data.getSun();
 		FloatPoint position = sun.getPosition().divide(scalation);
 		FloatPoint velocity = sun.getVelocity().divide(scalation);
-
+		this.particleQuantity = data.getAstronomicalObjectsQuantity() + 1;
+		this.length=data.getSpaceLength()/scalation;
+		
+		
 		StringBuilder sb = new StringBuilder();
-		sb.append(101).append(_SEPARTOR_).append(position.getX()).append(_SEPARTOR_).append(position.getY())
+		sb.append(particleQuantity).append(_SEPARTOR_).append(position.getX()).append(_SEPARTOR_).append(position.getY())
 				.append(_SEPARTOR_).append(velocity.getX()).append(_SEPARTOR_).append(velocity.getY());
 		sunData = sb.toString();
-		this.particleQuantity = data.getAstronomicalObjectsQuantity() + 1;
+
+		Files.write(Paths.get(path + "SolarSystemPositions"), new LinkedList<String>(), Charset.forName("UTF-8"),
+				StandardOpenOption.TRUNCATE_EXISTING);
+
 	}
 
 	@Override
@@ -54,41 +63,57 @@ public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 	@Override
 	public void simulationEnded() {
 		analizedParticles++;
-		if (analizedParticles == 100) {
+		if (analizedParticles == particleQuantity-1) {
 			analizedParticles = 0;
 			print();
 			data.clear();
 		}
 	}
 
-	int frame=0;
+	int frame = 0;
+
+
 	public void print() {
 
 		List<String> fileContent = new ArrayList<>();
 
+		fileContent.add(particleQuantity + "");
+		fileContent.add("Time=" + frame + " " + sizeBox(length) + " " + COLUMNS_FILE);
 
-			fileContent.add(particleQuantity + "");
-			fileContent.add(frame+++"");
-			fileContent.add(sunData);
+		
+		fileContent.add(sunData);
 
-			int id = 1;
-			for (ParticleData particleData : data) {
+		int id = 1;
+		for (ParticleData particleData : data) {
 
-				fileContent.add(id + particleData.toString());
-				id++;
-			}
+			fileContent.add(id + particleData.toString());
+			id++;
+		}
 
-	
 		try {
 			Files.write(Paths.get(path + "SolarSystemPositions"), fileContent, Charset.forName("UTF-8"),
-					StandardOpenOption.CREATE,StandardOpenOption.WRITE,StandardOpenOption.APPEND);
+					StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
 		} catch (IOException e) {
 			throw new IllegalAccessError();
 		}
 
 	}
 
-	private static double scalation = Math.pow(10, 9);
+	private String sizeBox(double length) {
+		String sizeX = length + " 0.00000000 0.00000000";
+		String sizeY = "0.00000000 " + length + " 0.00000000";
+		String sizeZ = "0.00000000 0.00000000 0.000000000000000001"; // sizeZ!=(0,0,0)
+																		// for
+																		// Ovito
+																		// recognize
+																		// the
+																		// box
+																		// size
+		String sizeBox = "Lattice=\"" + sizeX + " " + sizeY + " " + sizeZ + "\"";
+		return sizeBox;
+	}
+
+	
 
 	private static class ParticleData {
 		private int id;

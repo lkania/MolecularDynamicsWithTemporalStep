@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.omg.CORBA.IdentifierHelper;
+
 import itba.edu.ar.cellIndexMethod.CellIndexMethod;
 import itba.edu.ar.cellIndexMethod.IndexMatrix;
 import itba.edu.ar.cellIndexMethod.IndexMatrixBuilder;
@@ -27,60 +29,64 @@ import itba.edu.ar.ss.system.data.SolarSystemData;
 public class SolarSystemSimulation {
 
 	private List<SolarSystemSimulationObserver> subscribers = new LinkedList<>();
-	
-	public void subscribe(SolarSystemSimulationObserver ssso){
+
+	public void subscribe(SolarSystemSimulationObserver ssso) {
 		this.subscribers.add(ssso);
 	}
-	
+
+	private List<Particle> particles;
+
 	public void simulate(SolarSystemData data, String path, Algorithm<FloatPoint> algorithm)
 			throws InstantiationException, IllegalAccessException, IOException {
 
 		List<String> staticPath = new ArrayList<String>();
 		List<String> dynamicPath = new ArrayList<String>();
-		
+
 		SolarSystemGenerator.generate(data, path, staticPath, dynamicPath);
 
 		IndexMatrix indexMatrix = IndexMatrixBuilder.getIndexMatrix(staticPath.get(0), dynamicPath.get(0),
 				getCellQuantity(data), data.getDeltaTime());
 
+		Map<Integer, Entity<FloatPoint>> astronomicalObjectsMap = getAstronomicalObjects(indexMatrix.getParticles(),
+				data);
+
+		particles = indexMatrix.getParticles();
+		
 		for (double time = 0; time < data.getSimulationTime(); time += data.getDeltaTime()) {
 
-			Map<Integer, Entity<FloatPoint>> astronomicalObjectsMap = getAstronomicalObjects(indexMatrix.getParticles(),
-					data);
+			do {
+				indexMatrix.clear();
+				indexMatrix.addParticles(particles);
 
-			CellIndexMethod cellIndexMethod = new CellIndexMethod(indexMatrix, getRoute(data),
-					data.getMaxDistanceBetweenAstronomicalObjects());
-			
-			cellIndexMethod.execute();
+				CellIndexMethod cellIndexMethod = new CellIndexMethod(indexMatrix, getRoute(data),
+						data.getMaxDistanceBetweenAstronomicalObjects());
 
-			List<Particle> particles = getAstronomicalObjectsWithoutCollisions(indexMatrix.getParticles(),
-					astronomicalObjectsMap, data);
+				cellIndexMethod.execute();
+
+			} while (hasCollided(astronomicalObjectsMap, data));
 
 			Collection<Entity<FloatPoint>> astronomicalObjects = (Collection<Entity<FloatPoint>>) astronomicalObjectsMap
 					.values();
 
-			algorithm.evolveSystem(astronomicalObjects, getForces(astronomicalObjects,data), data.getDeltaTime());
+			algorithm.evolveSystem(astronomicalObjects, getForces(astronomicalObjects, data), data.getDeltaTime());
 
-			notifyStepEnded(particles,time);
-			
-			indexMatrix.clear();
-			indexMatrix.addParticles(particles);
+			notifyStepEnded(particles, time);
 
 		}
-		
+
 		notifySimulationEnded();
 
 	}
 
 	private void notifySimulationEnded() throws IOException {
-		for(SolarSystemSimulationObserver ssso : subscribers){
+		for (SolarSystemSimulationObserver ssso : subscribers) {
 			ssso.simulationEnded();
 		}
 	}
 
-	private void notifyStepEnded(List<Particle> particles,double time) {
-		for(SolarSystemSimulationObserver ssso : subscribers){
-			ssso.stepEnded(particles,time);
+	private void notifyStepEnded(List<Particle> particles, double time) {
+		for (SolarSystemSimulationObserver ssso : subscribers) {
+			ssso.stepEnded(particles, time);
 		}
 	}
 
@@ -104,7 +110,8 @@ public class SolarSystemSimulation {
 		Map<Integer, Entity<FloatPoint>> astronomicalObjectMap = new HashMap<>();
 
 		for (Particle ao : particles) {
-			astronomicalObjectMap.put(ao.getId(), new AstronomicalObject(ao, data.getAngularMoment()));
+			astronomicalObjectMap.put(ao.getId(),
+					new AstronomicalObject(ao, data.getAngularMoment(), data.getDeltaTime()));
 		}
 
 		return astronomicalObjectMap;
@@ -121,17 +128,16 @@ public class SolarSystemSimulation {
 	private static Route getRoute(SolarSystemData data) {
 		return new OptimizedRoute(getCellQuantity(data), false, data.getSpaceLength());
 	}
-	
+
 	private static int getCellQuantity(SolarSystemData data) {
-		if(data.getAstronomicalObjectsQuantity()/Math.pow(data.getSpaceLength(), 2)<0.05){
+		if (data.getAstronomicalObjectsQuantity() / Math.pow(data.getSpaceLength(), 2) < 0.05) {
 			return (int) Math.floor(Math.sqrt(data.getAstronomicalObjectsQuantity()));
-		}		
-		
-		return (int) Math.ceil(data.getSpaceLength() / data.getMaxDistanceBetweenAstronomicalObjects() ) - 1;
+		}
+
+		return (int) Math.ceil(data.getSpaceLength() / data.getMaxDistanceBetweenAstronomicalObjects()) - 1;
 	}
 
-	private static List<Particle> getAstronomicalObjectsWithoutCollisions(List<Particle> particles,
-			Map<Integer, Entity<FloatPoint>> astronomicalObjectsMap, SolarSystemData data) {
+	private boolean hasCollided(Map<Integer, Entity<FloatPoint>> astronomicalObjectsMap, SolarSystemData data) {
 
 		boolean collision = false;
 
@@ -145,20 +151,18 @@ public class SolarSystemSimulation {
 
 				}
 			}
-
 		}
 
-		if (collision) {
-			return getAstronomicalObjectsWithoutCollisions(particles, astronomicalObjectsMap, data);
-		}
+		particles.clear();
+		particles.addAll(getParticles(astronomicalObjectsMap.values()));
 
-		List<Particle> ans = new LinkedList<Particle>();
-		ans.addAll(getParticles(astronomicalObjectsMap.values()));
-		return ans;
+		return collision;
 	}
 
 	private static void collide(Particle particle, Particle neightbour,
 			Map<Integer, Entity<FloatPoint>> astronomicalObjectsMap, AstronomicalObject sun) {
+
+		System.out.println("hiyyy");
 		AstronomicalObject ao1 = (AstronomicalObject) astronomicalObjectsMap.get(particle.getId());
 		AstronomicalObject ao2 = (AstronomicalObject) astronomicalObjectsMap.get(neightbour.getId());
 
@@ -176,7 +180,8 @@ public class SolarSystemSimulation {
 
 		double tanVelocityAbs = (newAngularMoment) / (newMass * newPosition.abs());
 
-		FloatPoint tanVelocity = sun.getPosition().minus(newPosition).getVersor().multiply(tanVelocityAbs);
+		FloatPoint tanVelocity = sun.getPosition().minus(newPosition).getVersor().multiply(tanVelocityAbs)
+				.rotateRadiants(Math.PI / 2);
 
 		FloatPoint radialVelocity1 = getRadialVelocity(ao1, sun);
 		FloatPoint radialVelocity2 = getRadialVelocity(ao2, sun);
@@ -187,7 +192,7 @@ public class SolarSystemSimulation {
 		FloatPoint newVelocity = tanVelocity.plus(radialVelocity);
 
 		AstronomicalObject newAo = new AstronomicalObject(new Particle(newMass, newPosition, newVelocity),
-				newAngularMoment);
+				newAngularMoment, ao1.getPreviousPosition().plus(ao2.getPreviousPosition()).divide(2));
 
 		astronomicalObjectsMap.remove(ao1.getParticle().getId());
 		astronomicalObjectsMap.remove(ao2.getParticle().getId());
