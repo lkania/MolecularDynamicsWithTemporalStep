@@ -22,7 +22,7 @@ public abstract class SolarSystemData {
 	public abstract double getDeltaTime();
 
 	public abstract double getSimulationTime();
-
+	
 	public AstronomicalObject getSun() {
 		if (sun == null) {
 			sun = new AstronomicalObject(new Particle(getSunMass(),

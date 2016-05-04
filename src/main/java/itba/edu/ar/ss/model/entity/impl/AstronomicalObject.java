@@ -70,5 +70,6 @@ public class AstronomicalObject implements Entity<FloatPoint> {
 	public double getAngularMoment() {
 		return angularMoment;
 	}
+	
 
 }

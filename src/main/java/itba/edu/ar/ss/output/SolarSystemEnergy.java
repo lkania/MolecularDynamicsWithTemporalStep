@@ -17,7 +17,7 @@ import itba.edu.ar.ss.system.data.SolarSystemData;
 public class SolarSystemEnergy implements SolarSystemSimulationObserver {
 
 	private List<String> fileContent = new LinkedList<String>();
-	private static String _SEPARATOR_ = " ";
+	private static String _SEPARATOR_ = ",";
 	private String path;
 	private SolarSystemData data;
 	
@@ -54,7 +54,7 @@ public class SolarSystemEnergy implements SolarSystemSimulationObserver {
 
 	@Override
 	public void simulationEnded() throws IOException {
-		Files.write(Paths.get(path + "SolarSystemEnergy"), fileContent, Charset.forName("UTF-8"));
+		Files.write(Paths.get(path + "SolarSystemEnergy.csv"), fileContent, Charset.forName("UTF-8"));
 	}
 
 }

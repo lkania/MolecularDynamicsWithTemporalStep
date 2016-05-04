@@ -21,7 +21,7 @@ import itba.edu.ar.ss.system.data.SolarSystemData;
 public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 
 	private static double scalation = Math.pow(10, 9);
-	private static final String COLUMNS_FILE = "Properties=id:I:1:pos:R:2:velocity:R:2";
+	private static final String COLUMNS_FILE = "Properties=id:I:1:pos:R:2:velocity:R:2:color:R:3";
 	private List<ParticleData> data = new LinkedList<ParticleData>();
 
 	private String path;
@@ -41,7 +41,7 @@ public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append(particleQuantity).append(_SEPARTOR_).append(position.getX()).append(_SEPARTOR_).append(position.getY())
-				.append(_SEPARTOR_).append(velocity.getX()).append(_SEPARTOR_).append(velocity.getY());
+				.append(_SEPARTOR_).append(velocity.getX()).append(_SEPARTOR_).append(velocity.getY()).append(_SEPARTOR_).append("1 0 0");
 		sunData = sb.toString();
 
 		Files.write(Paths.get(path + "SolarSystemPositions"), new LinkedList<String>(), Charset.forName("UTF-8"),
@@ -167,7 +167,7 @@ public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 			if (data == null) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(_SEPARTOR_).append(position.getX()).append(_SEPARTOR_).append(position.getY())
-						.append(_SEPARTOR_).append(velocity.getX()).append(_SEPARTOR_).append(velocity.getY());
+						.append(_SEPARTOR_).append(velocity.getX()).append(_SEPARTOR_).append(velocity.getY()).append(_SEPARTOR_).append("0.4 0.8 0.9");
 				data = sb.toString();
 			}
 			return data;
