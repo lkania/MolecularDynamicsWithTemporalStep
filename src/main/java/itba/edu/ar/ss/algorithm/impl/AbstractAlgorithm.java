@@ -1,5 +1,7 @@
 package itba.edu.ar.ss.algorithm.impl;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,12 +48,16 @@ public abstract class AbstractAlgorithm<T> implements Algorithm<T> {
 		notifySimulationEnded();
 	}
 	
-	public void evolveSystem(List<Entity<T>> entities, List<Force<T>> forces, double finaltime){
+	public void evolveSystem(Collection<Entity<T>> entities, List<Force<T>> forces, double finaltime){
 		if(entities.size()!=forces.size())
 			throw new IllegalStateException();
 		
-		for(int i=0;i<entities.size();i++){
-			evolveEntity(entities.get(i), forces.get(i), finaltime);
+		Iterator<Entity<T>> iterator = entities.iterator();
+		int i=0;
+		while(iterator.hasNext()){
+			Entity<T> entity = iterator.next();
+			evolveEntity(entity, forces.get(i), finaltime);
+			i++;
 		}
 	}
 	

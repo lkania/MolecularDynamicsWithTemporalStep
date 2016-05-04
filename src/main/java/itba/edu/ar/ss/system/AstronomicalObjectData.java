@@ -30,5 +30,17 @@ public class AstronomicalObjectData extends Data {
 		return velocity;
 
 	}
+	
+	private static double A = Math.pow(10, 10) - Math.pow(10, 9);
+	private static double B = Math.pow(10, 9);
+	
+	@Override
+	public FloatPoint getPosition() {
+		double angle = Math.PI*2*Math.random();
+		double distanceFromSun = Math.random()*A+B;
+		System.out.println(distanceFromSun);
+		FloatPoint aux = new FloatPoint(distanceFromSun,0).rotateRadiants(angle);
+		return aux.plus(sunPosition);
+	}
 
 }

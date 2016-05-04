@@ -8,7 +8,7 @@ public class AstronomicalObjectForce implements Force<FloatPoint> {
 
 	private AstronomicalObject ao1;
 	private AstronomicalObject sun;
-	private static double G = 6.693 * Math.pow(10, -11);
+	public static double G = 6.693 * Math.pow(10, -11);
 	
 	public AstronomicalObjectForce(AstronomicalObject ao1, AstronomicalObject sun) {
 		super();
