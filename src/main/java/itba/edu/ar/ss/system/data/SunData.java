@@ -1,4 +1,4 @@
-package itba.edu.ar.ss.model.force.impl;
+package itba.edu.ar.ss.system.data;
 
 import itba.edu.ar.cellIndexMethod.data.particle.FloatPoint;
 import itba.edu.ar.input.file.data.Data;

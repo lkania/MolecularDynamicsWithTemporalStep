@@ -36,16 +36,16 @@ public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 		FloatPoint position = sun.getPosition().divide(scalation);
 		FloatPoint velocity = sun.getVelocity().divide(scalation);
 		this.particleQuantity = data.getAstronomicalObjectsQuantity() + 1;
-		this.length=data.getSpaceLength()/scalation;
-		
-		
+		this.length = data.getSpaceLength() / scalation;
+
 		StringBuilder sb = new StringBuilder();
-		sb.append(particleQuantity).append(_SEPARTOR_).append(position.getX()).append(_SEPARTOR_).append(position.getY())
-				.append(_SEPARTOR_).append(velocity.getX()).append(_SEPARTOR_).append(velocity.getY()).append(_SEPARTOR_).append("1 0 0");
+		sb.append(particleQuantity).append(_SEPARTOR_).append(position.getX()).append(_SEPARTOR_)
+				.append(position.getY()).append(_SEPARTOR_).append(velocity.getX()).append(_SEPARTOR_)
+				.append(velocity.getY()).append(_SEPARTOR_).append("1 0 0");
 		sunData = sb.toString();
 
-		Files.write(Paths.get(path + "SolarSystemPositions"), new LinkedList<String>(), Charset.forName("UTF-8"),
-				StandardOpenOption.TRUNCATE_EXISTING);
+		Files.write(Paths.get(path + "SolarSystemPositions.csv"), new LinkedList<String>(), Charset.forName("UTF-8"),
+				StandardOpenOption.TRUNCATE_EXISTING,StandardOpenOption.CREATE);
 
 	}
 
@@ -63,7 +63,7 @@ public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 	@Override
 	public void simulationEnded() {
 		analizedParticles++;
-		if (analizedParticles == particleQuantity-1) {
+		if (analizedParticles == particleQuantity - 1) {
 			analizedParticles = 0;
 			print();
 			data.clear();
@@ -72,7 +72,6 @@ public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 
 	int frame = 0;
 
-
 	public void print() {
 
 		List<String> fileContent = new ArrayList<>();
@@ -80,7 +79,6 @@ public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 		fileContent.add(particleQuantity + "");
 		fileContent.add("Time=" + frame + " " + sizeBox(length) + " " + COLUMNS_FILE);
 
-		
 		fileContent.add(sunData);
 
 		int id = 1;
@@ -91,7 +89,7 @@ public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 		}
 
 		try {
-			Files.write(Paths.get(path + "SolarSystemPositions"), fileContent, Charset.forName("UTF-8"),
+			Files.write(Paths.get(path + "SolarSystemPositions.csv"), fileContent, Charset.forName("UTF-8"),
 					StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
 		} catch (IOException e) {
 			throw new IllegalAccessError();
@@ -112,8 +110,6 @@ public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 		String sizeBox = "Lattice=\"" + sizeX + " " + sizeY + " " + sizeZ + "\"";
 		return sizeBox;
 	}
-
-	
 
 	private static class ParticleData {
 		private int id;
@@ -167,7 +163,8 @@ public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 			if (data == null) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(_SEPARTOR_).append(position.getX()).append(_SEPARTOR_).append(position.getY())
-						.append(_SEPARTOR_).append(velocity.getX()).append(_SEPARTOR_).append(velocity.getY()).append(_SEPARTOR_).append("0.4 0.8 0.9");
+						.append(_SEPARTOR_).append(velocity.getX()).append(_SEPARTOR_).append(velocity.getY())
+						.append(_SEPARTOR_).append("0.4 0.8 0.9");
 				data = sb.toString();
 			}
 			return data;
