@@ -38,7 +38,6 @@ public class AstronomicalObjectData extends Data {
 	public FloatPoint getPosition() {
 		double angle = Math.PI*2*Math.random();
 		double distanceFromSun = Math.random()*A+B;
-		System.out.println(distanceFromSun);
 		FloatPoint aux = new FloatPoint(distanceFromSun,0).rotateRadiants(angle);
 		return aux.plus(sunPosition);
 	}
