@@ -49,7 +49,7 @@ public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 
 	}
 
-	@Override
+	
 	public void deltaTimeStepDone(Entity<FloatPoint> entity, double time) {
 
 		ParticleData pd = new ParticleData(((AstronomicalObject) entity).getParticle());
@@ -60,7 +60,7 @@ public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 
 	private int analizedParticles = 0;
 
-	@Override
+	
 	public void simulationEnded() {
 		analizedParticles++;
 		if (analizedParticles == particleQuantity - 1) {
@@ -74,7 +74,7 @@ public class SolarSystemPositions implements AlgorithmObserver<FloatPoint> {
 
 	public void print() {
 
-		List<String> fileContent = new ArrayList<>();
+		List<String> fileContent = new ArrayList<String>();
 
 		fileContent.add(particleQuantity + "");
 		fileContent.add("Time=" + frame + " " + sizeBox(length) + " " + COLUMNS_FILE);
