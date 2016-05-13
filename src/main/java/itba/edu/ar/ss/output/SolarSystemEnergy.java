@@ -26,7 +26,7 @@ public class SolarSystemEnergy implements SolarSystemSimulationObserver {
 		this.data=data;
 	}
 	
-	@Override
+	
 	public void stepEnded(List<Particle> particles, double time) {
 		StringBuilder sb = new StringBuilder();
 		double totalPotentialEnergy = 0;
@@ -52,7 +52,7 @@ public class SolarSystemEnergy implements SolarSystemSimulationObserver {
 				/ particle.getPosition().distance(sun.getPosition());
 	}
 
-	@Override
+	
 	public void simulationEnded() throws IOException {
 		Files.write(Paths.get(path + "SolarSystemEnergy.csv"), fileContent, Charset.forName("UTF-8"));
 	}

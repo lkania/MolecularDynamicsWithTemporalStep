@@ -28,7 +28,7 @@ import itba.edu.ar.ss.system.data.SolarSystemData;
 
 public class SolarSystemSimulation {
 
-	private List<SolarSystemSimulationObserver> subscribers = new LinkedList<>();
+	private List<SolarSystemSimulationObserver> subscribers = new LinkedList<SolarSystemSimulationObserver>();
 
 	public void subscribe(SolarSystemSimulationObserver ssso) {
 		this.subscribers.add(ssso);
@@ -94,7 +94,7 @@ public class SolarSystemSimulation {
 			SolarSystemData data) {
 
 		Iterator<Entity<FloatPoint>> iterator = astronomicalObjects.iterator();
-		List<Force<FloatPoint>> ans = new LinkedList<>();
+		List<Force<FloatPoint>> ans = new LinkedList<Force<FloatPoint>>();
 
 		while (iterator.hasNext()) {
 			AstronomicalObject ao = (AstronomicalObject) iterator.next();
@@ -107,7 +107,7 @@ public class SolarSystemSimulation {
 
 	private static Map<Integer, Entity<FloatPoint>> getAstronomicalObjects(List<Particle> particles,
 			SolarSystemData data) {
-		Map<Integer, Entity<FloatPoint>> astronomicalObjectMap = new HashMap<>();
+		Map<Integer, Entity<FloatPoint>> astronomicalObjectMap = new HashMap<Integer, Entity<FloatPoint>>();
 
 		for (Particle ao : particles) {
 			astronomicalObjectMap.put(ao.getId(),
@@ -118,7 +118,7 @@ public class SolarSystemSimulation {
 	}
 
 	private static List<Particle> getParticles(Collection<Entity<FloatPoint>> collection) {
-		List<Particle> particles = new LinkedList<>();
+		List<Particle> particles = new LinkedList<Particle>();
 		for (Entity<FloatPoint> ao : collection) {
 			particles.add(((AstronomicalObject) ao).getParticle());
 		}
